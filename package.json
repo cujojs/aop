@@ -31,5 +31,6 @@
     "main": "./aop",
     "directories": {
         "test": "test"
-    }
+    },
+	"dojoBuild": "aop.profile.js"
 }
