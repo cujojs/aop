@@ -1,3 +1,51 @@
+# Usage
+
+## Vocabulary
+
+The following vocabulary is used in the source code to name variables:
+
+* Target: The object to which aspect are added.
+* Method: The specific methods on the object to which aspects are added. These are then joinpoints. 
+* Joinpoint: Points in a running program where additional behavior can be usefully joined. 
+* Pointcut: A set of joinpoints. Can be specified as String, [String], RegExp, Function(target):[String]
+* Advice/Aspects: Code to run at a join point. Can be specified as Object, Function(targetObject, targetMethodName).
+* Advice Type: Different advice types are executed at different times with respect to the wrapped function. See below for a list of all advice types.
+
+You can add aspects to a pointcut via the following syntax:
+
+```
+var aop = require('aop')
+aop.before(target, pointcut, aspect)
+aop.around(target, pointcut, aspect)
+aop.on(target, pointcut, aspect)
+aop.afterReturning(target, pointcut, aspect)
+aop.afterThrowing(target, pointcut, aspect)
+aop.after(target, pointcut, aspect)
+
+// Alternatively, a shortcut method to add multiple aspect types
+aop.add(target, method, {
+  before: aspect
+, around: aspect
+, on: aspect
+, after: aspect
+, afterReturning: aspect
+, afterThrowing: aspect
+})
+```
+
+The advised function is highly recommended reading. It is the main body that is called at runtime after all advice has been successfully added to objects.
+
+In particular, it specifies the behavior of various aspect types (run in the following order):
+
+* before(args): args are original arguments passed to the joinpoint, return value discarded, errors uncaught.
+* around(joinpoint): return value used, errors are caught for afterThrowing function, call joinpoint.proceed() to run joinpoint.
+* on(args): args are original arguments passed to the joinpoint, return value discarded, errors uncaught.
+* afterReturning(args): args are [result] of wrapped/original function, called only on success, return value discarded, errors uncaught.
+* afterThrowing(err): called only on error, return value discarded, errors uncaught.
+* after(args): args are [result] of wrapped/original function, return value discarded, errors uncaught. 
+
+----
+
 Please Note: this project has moved from briancavalier/aop to cujojs/aop.
 Any existing forks have been automatically moved to cujojs/aop. However,
 you'll need to update your clone and submodule remotes manually.
